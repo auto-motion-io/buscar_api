@@ -1,0 +1,8 @@
+package org.motion.buscar_api.application.services.strategies;
+
+import org.motion.motion_api.application.dtos.oficina.UpdateOficinaDTO;
+import org.motion.motion_api.domain.entities.Oficina;
+
+public interface OficinaServiceStrategy extends BaseService<Oficina,UpdateOficinaDTO,Oficina> {
+
+}

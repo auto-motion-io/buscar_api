@@ -2,7 +2,7 @@ package org.motion.buscar_api.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import org.motion.motion_api.domain.entities.pitstop.Gerente;
+import org.motion.buscar_api.domain.entities.buscar.Usuario;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +17,13 @@ public class TokenService {
     @Value("${JWT_SECRET:my-secret}")
     private String secret;
 
-    public String generateToken(Gerente gerente) {
+    public String generateToken(Usuario usuario) {
 
         var algoritmo = Algorithm.HMAC256(secret);
         String token = JWT
                 .create()
                 .withIssuer("motion-api")
-                .withSubject(gerente.getEmail())
+                .withSubject(usuario.getEmail())
                 .withExpiresAt(LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00")))
                 //.withExpiresAt(LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.UTC)))
                 .sign(algoritmo);

@@ -3,7 +3,8 @@ package org.motion.buscar_api.domain.entities.buscar;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.motion.motion_api.domain.entities.Oficina;
+import org.motion.buscar_api.domain.entities.Oficina;
+
 @Table(name = "Buscar_Avaliacao")
 @Entity(name = "Avaliacao")
 @Getter

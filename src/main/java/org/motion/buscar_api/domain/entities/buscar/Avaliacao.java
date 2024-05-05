@@ -18,11 +18,10 @@ public class Avaliacao {
     private Integer idAvaliacao;
     private Double nota;
     private String comentario;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "fkUsuario") @NotNull
     private Usuario usuarioAvaliacao;
-
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "fkOficina") @NotNull
     private Oficina oficinaAvaliacao;
 

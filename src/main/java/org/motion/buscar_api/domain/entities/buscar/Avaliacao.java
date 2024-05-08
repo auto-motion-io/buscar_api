@@ -1,5 +1,6 @@
 package org.motion.buscar_api.domain.entities.buscar;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -19,10 +20,10 @@ public class Avaliacao {
     private Double nota;
     private String comentario;
     @ManyToOne
-    @JoinColumn(name = "fkUsuario") @NotNull
+    @JoinColumn(name = "fkUsuario") @NotNull @JsonIgnore
     private Usuario usuarioAvaliacao;
     @ManyToOne
-    @JoinColumn(name = "fkOficina") @NotNull
+    @JoinColumn(name = "fkOficina") @NotNull @JsonIgnore
     private Oficina oficinaAvaliacao;
 
 

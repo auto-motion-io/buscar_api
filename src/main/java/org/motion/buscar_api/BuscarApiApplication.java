@@ -12,8 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @OpenAPIDefinition(info = @Info(title = "Buscar API", version = "1.0", description = ""))
 @SecurityScheme(name = "motion_jwt", scheme = "bearer", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 public class BuscarApiApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(BuscarApiApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(BuscarApiApplication.class, args);
+    }
 }

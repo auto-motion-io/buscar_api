@@ -26,16 +26,6 @@ public class AvaliacaoController {
         return avaliacaoService.buscarPorId(id);
     }
 
-    @GetMapping("/oficina/{idOficina}")
-    public List<Avaliacao> buscarPorOficina(@PathVariable int idOficina) {
-        return avaliacaoService.buscarPorOficina(idOficina);
-    }
-
-    @GetMapping("/usuario/{idUsuario}")
-    public List<Avaliacao> buscarPorUsuario(@PathVariable int idUsuario) {
-        return avaliacaoService.buscarPorUsuario(idUsuario);
-    }
-
     @PostMapping
     public Avaliacao criar(@RequestBody CreateAvaliacaoDTO novaAvaliacao) {
         return avaliacaoService.criar(novaAvaliacao);

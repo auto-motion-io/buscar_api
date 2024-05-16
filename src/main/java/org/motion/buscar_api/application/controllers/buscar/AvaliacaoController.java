@@ -1,5 +1,6 @@
 package org.motion.buscar_api.application.controllers.buscar;
 
+import jakarta.validation.Valid;
 import org.motion.buscar_api.application.dtos.AvaliacaoDTO.CreateAvaliacaoDTO;
 import org.motion.buscar_api.application.dtos.AvaliacaoDTO.UpdateAvaliacaoDTO;
 import org.motion.buscar_api.application.services.AvaliacaoService;
@@ -27,7 +28,7 @@ public class AvaliacaoController {
     }
 
     @PostMapping
-    public Avaliacao criar(@RequestBody CreateAvaliacaoDTO novaAvaliacao) {
+    public Avaliacao criar(@RequestBody @Valid CreateAvaliacaoDTO novaAvaliacao) {
         return avaliacaoService.criar(novaAvaliacao);
     }
 

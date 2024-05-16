@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.security.PermitAll;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.DecimalMin;
 import org.motion.buscar_api.application.dtos.UsuarioDTO.CreateUsuarioDTO;
 import org.motion.buscar_api.application.dtos.UsuarioDTO.LoginUsuarioRequest;
 import org.motion.buscar_api.application.dtos.UsuarioDTO.LoginUsuarioResponse;

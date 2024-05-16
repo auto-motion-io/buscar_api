@@ -3,7 +3,10 @@ package org.motion.buscar_api.application.services;
 import org.motion.buscar_api.application.dtos.AvaliacaoDTO.CreateAvaliacaoDTO;
 import org.motion.buscar_api.application.dtos.AvaliacaoDTO.UpdateAvaliacaoDTO;
 import org.motion.buscar_api.application.exception.RecursoNaoEncontradoException;
+import org.motion.buscar_api.application.services.util.ServiceHelper;
+import org.motion.buscar_api.domain.entities.Oficina;
 import org.motion.buscar_api.domain.entities.buscar.Avaliacao;
+import org.motion.buscar_api.domain.entities.buscar.Usuario;
 import org.motion.buscar_api.domain.repositories.IOficinaRepository;
 import org.motion.buscar_api.domain.repositories.buscar.IAvaliacaoRepository;
 import org.motion.buscar_api.domain.repositories.buscar.IUsuarioRepository;
@@ -19,10 +22,7 @@ public class AvaliacaoService {
     private IAvaliacaoRepository avaliacaoRepository;
 
     @Autowired
-    private IUsuarioRepository usuarioRepository;
-
-    @Autowired
-    private IOficinaRepository oficinaRepository;
+    private ServiceHelper serviceHelper;
 
     public List<Avaliacao> listarTodos() {
         return avaliacaoRepository.findAll();
@@ -34,16 +34,10 @@ public class AvaliacaoService {
     }
 
     public Avaliacao criar(CreateAvaliacaoDTO novaAvaliacao) {
-        Avaliacao avaliacao = new Avaliacao();
-        avaliacao.setNota(novaAvaliacao.nota());
-        avaliacao.setComentario(novaAvaliacao.comentario());
-
-        avaliacao.setUsuarioAvaliacao(usuarioRepository.findById(novaAvaliacao.fkUsuario()).orElseThrow(() ->
-                new RecursoNaoEncontradoException("Usuário não encontrado com o id: " + novaAvaliacao.fkUsuario())));
-
-        avaliacao.setOficinaAvaliacao(oficinaRepository.findById(novaAvaliacao.fkOficina()).orElseThrow(() ->
-                new RecursoNaoEncontradoException("Oficina não encontrada com o id: " + novaAvaliacao.fkOficina())));
-
+        System.out.println(novaAvaliacao.fkOficina());
+        Oficina oficina = serviceHelper.pegarOficinaValida(novaAvaliacao.fkOficina());
+        Usuario usuario = serviceHelper.pegarUsuarioValido(novaAvaliacao.fkUsuario());
+        Avaliacao avaliacao = new Avaliacao(novaAvaliacao, oficina, usuario);
         return avaliacaoRepository.save(avaliacao);
     }
 

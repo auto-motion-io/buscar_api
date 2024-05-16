@@ -1,7 +1,10 @@
 package org.motion.buscar_api.application.dtos.AvaliacaoDTO;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 
 public record CreateAvaliacaoDTO(
@@ -9,9 +12,9 @@ public record CreateAvaliacaoDTO(
         Double nota,
         @NotBlank
         String comentario,
-        @NotNull @JsonIgnore
+        @NotNull
         Integer fkUsuario,
-        @NotNull @JsonIgnore
+        @NotNull
         Integer fkOficina
 ) {
 }

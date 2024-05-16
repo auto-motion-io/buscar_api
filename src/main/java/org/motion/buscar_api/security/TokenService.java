@@ -6,8 +6,6 @@ import org.motion.buscar_api.domain.entities.buscar.Usuario;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.security.AlgorithmParameterGenerator;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 

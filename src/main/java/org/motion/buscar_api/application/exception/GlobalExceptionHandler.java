@@ -1,7 +1,5 @@
 package org.motion.buscar_api.application.exception;
 
-import com.auth0.jwt.exceptions.JWTCreationException;
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import org.apache.commons.lang3.NotImplementedException;
 import org.motion.buscar_api.application.exception.util.ErrorHelper;
 import org.motion.buscar_api.application.exception.util.ErrorResponse;

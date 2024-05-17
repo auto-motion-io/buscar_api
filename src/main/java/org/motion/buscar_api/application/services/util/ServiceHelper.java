@@ -31,12 +31,11 @@ public class ServiceHelper {
 
     /**
      * @param id
-     * @return Retorna um gerente caso encontre ou uma exceção caso não.
+     * @return Retorna um usuario caso encontre ou uma exceção caso não.
      * @throws RecursoNaoEncontradoException
      */
     public Usuario pegarUsuarioValido(int id){
         return usuarioRepository.findById(id).orElseThrow(() ->
                         new RecursoNaoEncontradoException("Usuario não encontrado com o id: " + id));
     }
-
 }

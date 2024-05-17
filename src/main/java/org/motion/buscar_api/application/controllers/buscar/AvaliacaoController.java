@@ -6,6 +6,7 @@ import org.motion.buscar_api.application.dtos.AvaliacaoDTO.UpdateAvaliacaoDTO;
 import org.motion.buscar_api.application.services.AvaliacaoService;
 import org.motion.buscar_api.domain.entities.buscar.Avaliacao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,29 +19,28 @@ public class AvaliacaoController {
     private AvaliacaoService avaliacaoService;
 
     @GetMapping
-    public List<Avaliacao> listarTodos() {
-        return avaliacaoService.listarTodos();
+    public ResponseEntity<List<Avaliacao>> listarTodos() {
+        return ResponseEntity.ok(avaliacaoService.listarTodos());
     }
 
     @GetMapping("/{id}")
-    public Avaliacao buscarPorId(@PathVariable int id) {
-        return avaliacaoService.buscarPorId(id);
+    public ResponseEntity<Avaliacao> buscarPorId(@PathVariable int id) {
+        return ResponseEntity.ok(avaliacaoService.buscarPorId(id));
     }
 
     @PostMapping
-    public Avaliacao criar(@RequestBody @Valid CreateAvaliacaoDTO novaAvaliacao) {
-        return avaliacaoService.criar(novaAvaliacao);
+    public ResponseEntity<Avaliacao> criar(@RequestBody @Valid CreateAvaliacaoDTO novaAvaliacao) {
+        return ResponseEntity.ok(avaliacaoService.criar(novaAvaliacao));
     }
 
     @PutMapping("/{id}")
-    public Avaliacao atualizar(@PathVariable int id, @RequestBody UpdateAvaliacaoDTO avaliacaoAtualizada) {
-        return avaliacaoService.atualizar(id, avaliacaoAtualizada);
+    public ResponseEntity<Avaliacao> atualizar(@PathVariable int id, @RequestBody UpdateAvaliacaoDTO avaliacaoAtualizada) {
+        return ResponseEntity.ok(avaliacaoService.atualizar(id, avaliacaoAtualizada));
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable int id) {
+    public ResponseEntity<Void> deletar(@PathVariable int id) {
         avaliacaoService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
-
-
 }

@@ -62,6 +62,9 @@ public class UsuarioService {
         if (usuario == null) {
             throw new RecursoNaoEncontradoException("Email não encontrado");
         }
+        if (!new BCryptPasswordEncoder().matches(request.senha(), usuario.getSenha())) {
+            throw new RecursoNaoEncontradoException("Senha incorreta");
+        }
 
         var usernamePassword = new UsernamePasswordAuthenticationToken(request.email(), request.senha());
         var auth = authenticationManager.authenticate(usernamePassword);

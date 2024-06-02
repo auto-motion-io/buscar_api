@@ -3,6 +3,7 @@ package org.motion.buscar_api.application.controllers.buscar;
 import jakarta.validation.Valid;
 import org.motion.buscar_api.application.dtos.AvaliacaoDTO.CreateAvaliacaoDTO;
 import org.motion.buscar_api.application.dtos.AvaliacaoDTO.UpdateAvaliacaoDTO;
+import org.motion.buscar_api.application.dtos.NotaOficinaDTO;
 import org.motion.buscar_api.application.services.AvaliacaoService;
 import org.motion.buscar_api.domain.entities.buscar.Avaliacao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,16 @@ public class AvaliacaoController {
     @GetMapping("/{id}")
     public ResponseEntity<Avaliacao> buscarPorId(@PathVariable int id) {
         return ResponseEntity.ok(avaliacaoService.buscarPorId(id));
+    }
+
+
+    @GetMapping("/media-notas-oficinas")
+    public ResponseEntity<List<NotaOficinaDTO>> listarMediaNotaOficinas() {
+        List<NotaOficinaDTO> medias = avaliacaoService.listarMediaNotaOficinas();
+        if(medias.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(medias);
     }
 
     @PostMapping

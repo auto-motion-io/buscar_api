@@ -18,7 +18,7 @@ import lombok.Setter;
 
 public class Oficina {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Integer idOficina;
+    private Integer id;
     @NotNull @NotBlank
     private String nome;
     @NotNull @NotBlank

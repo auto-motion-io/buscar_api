@@ -2,6 +2,7 @@ package org.motion.buscar_api.application.services;
 
 import org.motion.buscar_api.application.dtos.AvaliacaoDTO.CreateAvaliacaoDTO;
 import org.motion.buscar_api.application.dtos.AvaliacaoDTO.UpdateAvaliacaoDTO;
+import org.motion.buscar_api.application.dtos.NotaOficinaDTO;
 import org.motion.buscar_api.application.exception.RecursoNaoEncontradoException;
 import org.motion.buscar_api.application.services.util.ServiceHelper;
 import org.motion.buscar_api.domain.entities.Oficina;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class AvaliacaoService {
@@ -26,6 +29,19 @@ public class AvaliacaoService {
 
     public List<Avaliacao> listarTodos() {
         return avaliacaoRepository.findAll();
+    }
+
+    public List<NotaOficinaDTO> listarMediaNotaOficinas(){
+        List<Avaliacao> avaliacoes = avaliacaoRepository.findAll();
+
+        Map<Integer, Double> mediaNotasPorOficina = avaliacoes.stream()
+                .collect(Collectors.groupingBy(avaliacao -> avaliacao.getOficina().getId(),
+                        Collectors.averagingDouble(Avaliacao::getNota)));
+
+
+        return mediaNotasPorOficina.entrySet().stream()
+                .map(entry -> new NotaOficinaDTO(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
     }
 
     public Avaliacao buscarPorId(int id) {

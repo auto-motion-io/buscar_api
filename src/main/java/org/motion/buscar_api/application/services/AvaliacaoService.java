@@ -44,6 +44,12 @@ public class AvaliacaoService {
                 .collect(Collectors.toList());
     }
 
+    public List<NotaOficinaDTO> listarMediaNotaOficinaPorId(int id){
+        List<NotaOficinaDTO> medias = listarMediaNotaOficinas();
+        return medias.stream().filter(notaOficinaDTO -> notaOficinaDTO.getIdOficina() == id).toList();
+    }
+
+
     public Avaliacao buscarPorId(int id) {
         return avaliacaoRepository.findById(id).orElseThrow(() ->
                 new RecursoNaoEncontradoException("Avaliacao não encontrada com o id: " + id));

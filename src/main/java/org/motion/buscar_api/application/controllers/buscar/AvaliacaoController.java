@@ -39,6 +39,15 @@ public class AvaliacaoController {
         return ResponseEntity.ok(medias);
     }
 
+    @GetMapping("/media-notas-oficina/{id}")
+    public ResponseEntity<List<NotaOficinaDTO>> listarMediaNotaOficinaPorId(@PathVariable int id) {
+        List<NotaOficinaDTO> medias = avaliacaoService.listarMediaNotaOficinaPorId(id);
+        if(medias.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(medias);
+    }
+
     @PostMapping
     public ResponseEntity<Avaliacao> criar(@RequestBody @Valid CreateAvaliacaoDTO novaAvaliacao) {
         return ResponseEntity.ok(avaliacaoService.criar(novaAvaliacao));

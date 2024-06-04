@@ -8,14 +8,11 @@ import org.motion.buscar_api.application.services.util.ServiceHelper;
 import org.motion.buscar_api.domain.entities.Oficina;
 import org.motion.buscar_api.domain.entities.buscar.Avaliacao;
 import org.motion.buscar_api.domain.entities.buscar.Usuario;
-import org.motion.buscar_api.domain.repositories.IOficinaRepository;
 import org.motion.buscar_api.domain.repositories.buscar.IAvaliacaoRepository;
-import org.motion.buscar_api.domain.repositories.buscar.IUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,22 +28,28 @@ public class AvaliacaoService {
         return avaliacaoRepository.findAll();
     }
 
-    public List<NotaOficinaDTO> listarMediaNotaOficinas(){
-        List<Avaliacao> avaliacoes = avaliacaoRepository.findAll();
+    public List<NotaOficinaDTO> listarMediaNotaOficinas() {
 
-        Map<Integer, Double> mediaNotasPorOficina = avaliacoes.stream()
-                .collect(Collectors.groupingBy(avaliacao -> avaliacao.getOficina().getId(),
-                        Collectors.averagingDouble(Avaliacao::getNota)));
+        List<Object[]> results = avaliacaoRepository.listarMediaNotaOficinas();
+
+        return results.stream().map(result -> {
+            NotaOficinaDTO dto = new NotaOficinaDTO();
+            dto.setIdOficina((Integer) result[0]);
+            dto.setNota((Double) result[1]);
+            System.out.println(result[2]);
+            dto.setQuantidadeAvaliacoes((Long) result[2]);
+            return dto;
+        }).collect(Collectors.toList());
 
 
-        return mediaNotasPorOficina.entrySet().stream()
-                .map(entry -> new NotaOficinaDTO(entry.getKey(), entry.getValue()))
-                .collect(Collectors.toList());
     }
 
-    public List<NotaOficinaDTO> listarMediaNotaOficinaPorId(int id){
+    public NotaOficinaDTO listarMediaNotaOficinaPorId(int id) {
         List<NotaOficinaDTO> medias = listarMediaNotaOficinas();
-        return medias.stream().filter(notaOficinaDTO -> notaOficinaDTO.getIdOficina() == id).toList();
+        serviceHelper.pegarOficinaValida(id);
+        List<NotaOficinaDTO> mediaFiltrada = medias.stream().filter(notaOficinaDTO -> notaOficinaDTO.getIdOficina() == id).toList();
+
+        return !mediaFiltrada.isEmpty() ? mediaFiltrada.get(0) : new NotaOficinaDTO(id,0.0, 0L);
     }
 
 

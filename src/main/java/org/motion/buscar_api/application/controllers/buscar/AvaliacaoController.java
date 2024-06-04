@@ -42,7 +42,7 @@ public class AvaliacaoController {
     @GetMapping("/media-notas-oficina/{id}")
     public ResponseEntity<List<NotaOficinaDTO>> listarMediaNotaOficinaPorId(@PathVariable int id) {
         List<NotaOficinaDTO> medias = avaliacaoService.listarMediaNotaOficinaPorId(id);
-        if(medias.isEmpty()){
+        if(medias.isEmpty() || medias.get(0).getIdOficina() == 0){
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(medias);

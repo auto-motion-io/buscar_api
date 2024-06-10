@@ -97,13 +97,14 @@ public class UsuarioService {
         helper.setText(htmlBody, true); // Habilita o processamento de HTML
         emailSender.send(message);
     }
-   public boolean enviarEmailRecuperacaoSenha(String email) throws MessagingException {
+   public Usuario enviarEmailRecuperacaoSenha(String email) throws MessagingException {
         boolean exists = usuarioRepository.existsByEmail(email);
         if (!exists) {
             throw new RecursoNaoEncontradoException("Email não encontrado");
         }
+        Usuario usuario = (Usuario) buscarPorEmail(email);
         emailRecuperarSenha(email);
-        return true;
+        return usuario;
    }
 
    public void deletar(int id){

@@ -48,9 +48,9 @@ public class UsuarioController {
     }
 
     @PostMapping("/recuperar-senha")
-    public ResponseEntity<String> recuperarSenha(@RequestParam String email) throws MessagingException {
-        usuarioService.enviarEmailRecuperacaoSenha(email);
-        return ResponseEntity.status(200).body("Email enviado com sucesso");
+    public ResponseEntity<Usuario> recuperarSenha(@RequestParam String email) throws MessagingException {
+        Usuario usuario = usuarioService.enviarEmailRecuperacaoSenha(email);
+        return ResponseEntity.status(200).body(usuario);
     }
 
     @PutMapping("/atualizar-senha")

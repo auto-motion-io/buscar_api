@@ -1,13 +1,11 @@
 package org.motion.buscar_api.application.controllers.buscar;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.security.PermitAll;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
-import org.motion.buscar_api.application.dtos.UsuarioDTO.CreateUsuarioDTO;
-import org.motion.buscar_api.application.dtos.UsuarioDTO.LoginUsuarioRequest;
-import org.motion.buscar_api.application.dtos.UsuarioDTO.LoginUsuarioResponse;
-import org.motion.buscar_api.application.dtos.UsuarioDTO.UpdateSenhaUsuarioDTO;
+import org.motion.buscar_api.application.dtos.UsuarioDTO.*;
 import org.motion.buscar_api.application.services.UsuarioService;
 import org.motion.buscar_api.domain.entities.buscar.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,11 +45,19 @@ public class UsuarioController {
         return ResponseEntity.status(200).body(usuarioLogado);
     }
 
-    @PostMapping("/recuperar-senha")
-    public ResponseEntity<String> recuperarSenha(@RequestParam String email) throws MessagingException {
-        usuarioService.enviarEmailRecuperacaoSenha(email);
-        return ResponseEntity.status(200).body("Email enviado com sucesso");
+    @Operation(summary = "Seta um token de um gerente pelo email e envia o email com o token. Recebe um parâmetro op que pode ser email ou senha para a respectiva operação")
+    @PostMapping("/set-token")
+    public ResponseEntity<Void> setToken(@RequestBody @Valid SendEmailDTO dto, @RequestParam String op) throws MessagingException {
+        usuarioService.enviarTokenConfirmacao(dto.getEmail(),op);
+        return ResponseEntity.status(204).build();
     }
+    @Operation(summary = "Confirma o token de um gerente, após a confirmação o token é removido. Recebe um parâmetro op que pode ser email ou senha para a respectiva operação. Caso a operação seja confirmação de email não é necessário colocar a nova senha")
+    @PostMapping("/confirmar-token")
+    public ResponseEntity<Void> confirmarToken(@RequestBody @Valid ConfirmTokenDTO dto, @RequestParam String op) {
+        usuarioService.validarTokenConfirmacao(dto,op);
+        return ResponseEntity.status(204).build();
+    }
+
 
     @PutMapping("/atualizar-senha")
     public ResponseEntity<Usuario> atualizarSenha(@Valid @RequestParam int id, @RequestBody UpdateSenhaUsuarioDTO updateSenhaUsuarioDTO) {

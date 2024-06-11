@@ -4,16 +4,14 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import org.motion.buscar_api.application.dtos.UsuarioDTO.CreateUsuarioDTO;
-import org.motion.buscar_api.application.dtos.UsuarioDTO.LoginUsuarioRequest;
-import org.motion.buscar_api.application.dtos.UsuarioDTO.LoginUsuarioResponse;
-import org.motion.buscar_api.application.dtos.UsuarioDTO.UpdateSenhaUsuarioDTO;
+import org.motion.buscar_api.application.dtos.UsuarioDTO.*;
 import org.motion.buscar_api.application.exception.DadoUnicoDuplicadoException;
 import org.motion.buscar_api.application.exception.RecursoNaoEncontradoException;
 import org.motion.buscar_api.domain.entities.buscar.Usuario;
 import org.motion.buscar_api.domain.repositories.buscar.IUsuarioRepository;
 import org.motion.buscar_api.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,7 +19,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.security.SecureRandom;
 import java.util.List;
 
 @Service
@@ -81,30 +81,35 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    private void emailRecuperarSenha(String email) throws MessagingException {
-        String htmlBody = "<html>" +
-                "<head><link href='https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap' rel='stylesheet'></head>" +
-                "<body style='font-family: Roboto, sans-serif;'><h2>Recebemos uma mensagem informando que você esqueceu sua senha.<br> Se foi você, pode redefinir a senha agora.</h2>" +
-                "<a href='https://www.google.com' style='padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;'>Ir para o Google</a>"+
-                "<p>Atenciosamente,</p>" +
-                "<p>A equipe motion</p>" +
-                "</body></html>";
+    public void enviarTokenConfirmacao(String email, String op) throws MessagingException {
+        Usuario usuario = usuarioRepository.findUsuarioByEmail(email);
+        if (usuario == null) throw new RecursoNaoEncontradoException("Email não encontrado no sistema");
 
-        MimeMessage message = emailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        helper.setTo(email);
-        helper.setSubject("Recuperação de senha");
-        helper.setText(htmlBody, true); // Habilita o processamento de HTML
-        emailSender.send(message);
-    }
-   public boolean enviarEmailRecuperacaoSenha(String email) throws MessagingException {
-        boolean exists = usuarioRepository.existsByEmail(email);
-        if (!exists) {
-            throw new RecursoNaoEncontradoException("Email não encontrado");
+        String token = geradorDeSenhaAleatoria();
+        usuario.setConfirmToken(token);
+        usuarioRepository.save(usuario);
+
+        if (op.equalsIgnoreCase("senha"))
+            emailRecuperacao(usuario);
+        else if (op.equalsIgnoreCase("email")) {
+            emailTokenConfirmacao(email, token);
         }
-        emailRecuperarSenha(email);
-        return true;
-   }
+    }
+
+    public void validarTokenConfirmacao(ConfirmTokenDTO dto, String op) {
+        Usuario usuario = usuarioRepository.findUsuarioByEmail(dto.getEmail());
+        if (usuario == null) throw new RecursoNaoEncontradoException("Email não encontrado no sistema");
+        if (usuario.getConfirmToken() == null) throw new RecursoNaoEncontradoException("Token não foi gerado");
+        if (!usuario.getConfirmToken().equalsIgnoreCase(dto.getToken()))
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400),"Token inválido");
+
+        usuario.setConfirmToken(null);
+        if(op.equalsIgnoreCase("senha")){
+            String senhaCriptografada = new BCryptPasswordEncoder().encode(dto.getSenha());
+            usuario.setSenha(senhaCriptografada);
+        }
+        usuarioRepository.save(usuario);
+    }
 
    public void deletar(int id){
         Usuario usuario = buscarPorId(id);
@@ -115,5 +120,61 @@ public class UsuarioService {
         if (usuarioRepository.existsByEmail(email)) {
             throw new DadoUnicoDuplicadoException("Email já cadastrado");
         }
+    }
+
+    private void emailRecuperacao(Usuario usuario) throws MessagingException {
+
+        String htmlTemplate = "<html lang=\"en\">" +
+                "<head>" +
+                "    <meta charset=\"UTF-8\">" +
+                "    <link href='https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap' rel='stylesheet'>" +
+                "</head>" +
+                "<body style=\"font-family: Roboto,sans-serif;\">" +
+                "    <h2>Olá, %s.</h2><br>" +
+                "    <span>Insira este código para concluir a redefinição</span><br>" +
+                "    <h1>%s</h1>" +
+                "    <span>Se você não solicitou esse código, recomendamos que altere sua senha.</span>" +
+                "</body>" +
+                "</html>";
+
+        String htmlContent = String.format(htmlTemplate, usuario.getNome(), usuario.getConfirmToken());
+
+
+        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        helper.setTo(usuario.getEmail());
+        helper.setSubject("Recuperação de senha");
+        helper.setText(htmlContent, true);
+        emailSender.send(message);
+    }
+
+
+    private void emailTokenConfirmacao(String email, String token) throws MessagingException {
+        String htmlBody = "<html>" +
+                "<head><link href='https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap' rel='stylesheet'></head>" +
+                "<body style='font-family: Roboto, sans-serif;'><h2>Confirme seu email utilizando o token abaixo.<br></h2>" +
+                "<p>Token de confirmação: <strong>" + token + "</strong></p>" +
+                "<p>Atenciosamente,</p>" +
+                "<p>A equipe motion</p>" +
+                "</body></html>";
+
+
+        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        helper.setTo(email);
+        helper.setSubject("Confirme seu email motion");
+        helper.setText(htmlBody, true); // Habilita o processamento de HTML
+        emailSender.send(message);
+    }
+
+    private String geradorDeSenhaAleatoria() {
+        final String CARACTERES_PERMITIDOS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder(6);
+        for (int i = 0; i < 6; i++) {
+            int indice = random.nextInt(CARACTERES_PERMITIDOS.length());
+            sb.append(CARACTERES_PERMITIDOS.charAt(indice));
+        }
+        return sb.toString();
     }
 }

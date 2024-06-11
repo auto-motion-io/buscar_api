@@ -45,10 +45,11 @@ public class UsuarioController {
         return ResponseEntity.status(200).body(usuarioLogado);
     }
 
+
     @Operation(summary = "Seta um token de um gerente pelo email e envia o email com o token. Recebe um parâmetro op que pode ser email ou senha para a respectiva operação")
     @PostMapping("/set-token")
     public ResponseEntity<Void> setToken(@RequestBody @Valid SendEmailDTO dto, @RequestParam String op) throws MessagingException {
-        usuarioService.enviarTokenConfirmacao(dto.getEmail(),op);
+        usuarioService.enviarTokenConfirmacao(dto.getEmail(), op);
         return ResponseEntity.status(204).build();
     }
     @Operation(summary = "Confirma o token de um gerente, após a confirmação o token é removido. Recebe um parâmetro op que pode ser email ou senha para a respectiva operação. Caso a operação seja confirmação de email não é necessário colocar a nova senha")

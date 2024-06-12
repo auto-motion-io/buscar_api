@@ -78,6 +78,8 @@ public class UsuarioService {
         usuario.setNome(updateUsuarioDTO.getNome());
         usuario.setSobrenome(updateUsuarioDTO.getSobrenome());
         usuario.setEmail(updateUsuarioDTO.getEmail());
+        String senhaCriptografada = new BCryptPasswordEncoder().encode(updateUsuarioDTO.getSenha());
+        usuario.setSenha(senhaCriptografada);
         return usuarioRepository.save(usuario);
     }
 

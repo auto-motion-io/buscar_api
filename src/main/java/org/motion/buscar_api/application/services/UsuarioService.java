@@ -72,6 +72,15 @@ public class UsuarioService {
         return new LoginUsuarioResponse(usuario.getIdUsuario(),usuario.getNome(), token);
     }
 
+    @Transactional
+    public Usuario atualizar(int id, UpdateUsuarioDTO updateUsuarioDTO) {
+        Usuario usuario = buscarPorId(id);
+        usuario.setNome(updateUsuarioDTO.getNome());
+        usuario.setSobrenome(updateUsuarioDTO.getSobrenome());
+        usuario.setEmail(updateUsuarioDTO.getEmail());
+        return usuarioRepository.save(usuario);
+    }
+
 
     @Transactional
     public Usuario atualizarSenha(int id, UpdateSenhaUsuarioDTO updateSenhaUsuarioDTO) {

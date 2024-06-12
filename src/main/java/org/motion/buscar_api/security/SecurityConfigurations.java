@@ -29,7 +29,10 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.GET, "/docs").permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
-                        .anyRequest().permitAll()
+                        .requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/avaliacoes/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/usuarios/**").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

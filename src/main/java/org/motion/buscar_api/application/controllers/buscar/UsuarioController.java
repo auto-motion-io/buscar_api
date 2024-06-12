@@ -45,6 +45,11 @@ public class UsuarioController {
         return ResponseEntity.status(200).body(usuarioLogado);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Usuario> atualizar(@PathVariable int id, @RequestBody @Valid UpdateUsuarioDTO updateUsuarioDTO) {
+        Usuario usuarioAtualizado = usuarioService.atualizar(id,updateUsuarioDTO);
+        return ResponseEntity.status(200).body(usuarioAtualizado);
+    }
 
     @Operation(summary = "Seta um token de um gerente pelo email e envia o email com o token. Recebe um parâmetro op que pode ser email ou senha para a respectiva operação")
     @PostMapping("/set-token")

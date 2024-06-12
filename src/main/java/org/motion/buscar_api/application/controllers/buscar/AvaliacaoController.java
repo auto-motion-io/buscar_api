@@ -1,5 +1,6 @@
 package org.motion.buscar_api.application.controllers.buscar;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.motion.buscar_api.application.dtos.AvaliacaoDTO.CreateAvaliacaoDTO;
 import org.motion.buscar_api.application.dtos.AvaliacaoDTO.UpdateAvaliacaoDTO;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/avaliacoes")
+@SecurityRequirement(name = "motion_jwt")
 public class AvaliacaoController {
 
     @Autowired

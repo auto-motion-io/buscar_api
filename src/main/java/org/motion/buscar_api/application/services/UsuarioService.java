@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.motion.buscar_api.application.dtos.UsuarioDTO.*;
 import org.motion.buscar_api.application.exception.DadoUnicoDuplicadoException;
 import org.motion.buscar_api.application.exception.RecursoNaoEncontradoException;
+import org.motion.buscar_api.application.exception.SenhaIncorretaException;
 import org.motion.buscar_api.domain.entities.buscar.Usuario;
 import org.motion.buscar_api.domain.repositories.buscar.IUsuarioRepository;
 import org.motion.buscar_api.security.TokenService;
@@ -63,7 +64,7 @@ public class UsuarioService {
             throw new RecursoNaoEncontradoException("Email não encontrado");
         }
         if (!new BCryptPasswordEncoder().matches(request.senha(), usuario.getSenha())) {
-            throw new RecursoNaoEncontradoException("Senha incorreta");
+            throw new SenhaIncorretaException("Senha incorreta");
         }
 
         var usernamePassword = new UsernamePasswordAuthenticationToken(request.email(), request.senha());
@@ -78,8 +79,6 @@ public class UsuarioService {
         usuario.setNome(updateUsuarioDTO.getNome());
         usuario.setSobrenome(updateUsuarioDTO.getSobrenome());
         usuario.setEmail(updateUsuarioDTO.getEmail());
-        String senhaCriptografada = new BCryptPasswordEncoder().encode(updateUsuarioDTO.getSenha());
-        usuario.setSenha(senhaCriptografada);
         return usuarioRepository.save(usuario);
     }
 
@@ -87,7 +86,9 @@ public class UsuarioService {
     @Transactional
     public Usuario atualizarSenha(int id, UpdateSenhaUsuarioDTO updateSenhaUsuarioDTO) {
         Usuario usuario = buscarPorId(id);
-        String senhaCriptografada = new BCryptPasswordEncoder().encode(updateSenhaUsuarioDTO.senha());
+        boolean isOldPasswordCorrect = new BCryptPasswordEncoder().matches(updateSenhaUsuarioDTO.getSenhaAntiga(), usuario.getSenha());
+        if(!isOldPasswordCorrect) throw new SenhaIncorretaException("Senha inválida");
+        String senhaCriptografada = new BCryptPasswordEncoder().encode(updateSenhaUsuarioDTO.getSenhaNova());
         usuario.setSenha(senhaCriptografada);
         return usuarioRepository.save(usuario);
     }
@@ -112,7 +113,7 @@ public class UsuarioService {
         if (usuario == null) throw new RecursoNaoEncontradoException("Email não encontrado no sistema");
         if (usuario.getConfirmToken() == null) throw new RecursoNaoEncontradoException("Token não foi gerado");
         if (!usuario.getConfirmToken().equalsIgnoreCase(dto.getToken()))
-            throw new ResponseStatusException(HttpStatusCode.valueOf(400),"Token inválido");
+            throw new SenhaIncorretaException("Token inválido");
 
         usuario.setConfirmToken(null);
         if(op.equalsIgnoreCase("senha")){

@@ -65,8 +65,8 @@ public class UsuarioController {
     }
 
 
-    @PutMapping("/atualizar-senha")
-    public ResponseEntity<Usuario> atualizarSenha(@Valid @RequestParam int id, @RequestBody UpdateSenhaUsuarioDTO updateSenhaUsuarioDTO) {
+    @PutMapping("/atualizar-senha/{id}")
+    public ResponseEntity<Usuario> atualizarSenha(@PathVariable int id, @RequestBody UpdateSenhaUsuarioDTO updateSenhaUsuarioDTO) {
         Usuario usuarioAtualizado = usuarioService.atualizarSenha(id,updateSenhaUsuarioDTO);
         return ResponseEntity.status(200).body(usuarioAtualizado);
     }

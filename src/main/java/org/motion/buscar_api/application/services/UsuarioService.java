@@ -61,10 +61,10 @@ public class UsuarioService {
     public LoginUsuarioResponse login(@Valid LoginUsuarioRequest request){
         Usuario usuario = (Usuario) buscarPorEmail(request.email());
         if (usuario == null) {
-            throw new RecursoNaoEncontradoException("Email não encontrado");
+            throw new RecursoNaoEncontradoException("Essa conta Buscar não existe. Insira uma conta diferente ou obtenha uma nova.");
         }
         if (!new BCryptPasswordEncoder().matches(request.senha(), usuario.getSenha())) {
-            throw new SenhaIncorretaException("Senha incorreta");
+            throw new SenhaIncorretaException("Sua conta ou senha está incorreta.");
         }
 
         var usernamePassword = new UsernamePasswordAuthenticationToken(request.email(), request.senha());
@@ -87,7 +87,7 @@ public class UsuarioService {
     public Usuario atualizarSenha(int id, UpdateSenhaUsuarioDTO updateSenhaUsuarioDTO) {
         Usuario usuario = buscarPorId(id);
         boolean isOldPasswordCorrect = new BCryptPasswordEncoder().matches(updateSenhaUsuarioDTO.getSenhaAntiga(), usuario.getSenha());
-        if(!isOldPasswordCorrect) throw new SenhaIncorretaException("Senha inválida");
+        if(!isOldPasswordCorrect) throw new SenhaIncorretaException("Senha incorreta.");
         String senhaCriptografada = new BCryptPasswordEncoder().encode(updateSenhaUsuarioDTO.getSenhaNova());
         usuario.setSenha(senhaCriptografada);
         return usuarioRepository.save(usuario);
@@ -95,7 +95,7 @@ public class UsuarioService {
 
     public void enviarTokenConfirmacao(String email, String op) throws MessagingException {
         Usuario usuario = usuarioRepository.findUsuarioByEmail(email);
-        if (usuario == null) throw new RecursoNaoEncontradoException("Email não encontrado no sistema");
+        if (usuario == null) throw new RecursoNaoEncontradoException("Essa conta Buscar não existe. Insira uma conta diferente ou obtenha uma nova.");
 
         String token = geradorDeSenhaAleatoria();
         usuario.setConfirmToken(token);
@@ -131,7 +131,7 @@ public class UsuarioService {
 
     private void verificarEmailDuplicado(String email) {
         if (usuarioRepository.existsByEmail(email)) {
-            throw new DadoUnicoDuplicadoException("Email já cadastrado");
+            throw new DadoUnicoDuplicadoException("Email já cadastrado. Vá para login");
         }
     }
 

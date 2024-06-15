@@ -34,7 +34,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/cadastrar")
-    public ResponseEntity<Usuario> cadastrar(@RequestBody CreateUsuarioDTO usuario) {
+    public ResponseEntity<Usuario> cadastrar(@RequestBody @Valid CreateUsuarioDTO usuario) {
         Usuario usuarioCadastrado = usuarioService.criar(usuario);
         return ResponseEntity.status(201).body(usuarioCadastrado);
     }

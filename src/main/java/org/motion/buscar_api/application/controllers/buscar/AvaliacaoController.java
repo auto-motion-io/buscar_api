@@ -23,7 +23,9 @@ public class AvaliacaoController {
 
     @GetMapping
     public ResponseEntity<List<Avaliacao>> listarTodos() {
-        return ResponseEntity.ok(avaliacaoService.listarTodos());
+        List<Avaliacao> avaliacoes = avaliacaoService.listarTodos();
+        if(avaliacoes.isEmpty()) return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(avaliacoes);
     }
 
     @GetMapping("/{id}")
@@ -47,6 +49,13 @@ public class AvaliacaoController {
         return ResponseEntity.ok(dto);
     }
 
+    @GetMapping("/oficina/{idOficina}")
+    public ResponseEntity<List<Avaliacao>> listarAvaliacoesPorOficina(@PathVariable int idOficina) {
+        List<Avaliacao> avaliacoes = avaliacaoService.listarAvaliacoesPorOficina(idOficina);
+        if(avaliacoes.isEmpty()) return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(avaliacoes);
+    }
+
     @PostMapping
     public ResponseEntity<Avaliacao> criar(@RequestBody @Valid CreateAvaliacaoDTO novaAvaliacao) {
         return ResponseEntity.ok(avaliacaoService.criar(novaAvaliacao));
@@ -54,6 +63,7 @@ public class AvaliacaoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Avaliacao> atualizar(@PathVariable int id, @RequestBody UpdateAvaliacaoDTO avaliacaoAtualizada) {
+
         return ResponseEntity.ok(avaliacaoService.atualizar(id, avaliacaoAtualizada));
     }
 

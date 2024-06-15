@@ -58,6 +58,11 @@ public class AvaliacaoService {
                 new RecursoNaoEncontradoException("Avaliacao não encontrada com o id: " + id));
     }
 
+    public List<Avaliacao> listarAvaliacoesPorOficina(int idOficina) {
+        Oficina oficina = serviceHelper.pegarOficinaValida(idOficina);
+        return avaliacaoRepository.findAvaliacaoByOficina(oficina);
+    }
+
     public Avaliacao criar(CreateAvaliacaoDTO novaAvaliacao) {
         System.out.println(novaAvaliacao.fkOficina());
         Oficina oficina = serviceHelper.pegarOficinaValida(novaAvaliacao.fkOficina());

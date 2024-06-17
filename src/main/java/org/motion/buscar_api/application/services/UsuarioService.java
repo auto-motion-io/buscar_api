@@ -70,7 +70,7 @@ public class UsuarioService {
         var usernamePassword = new UsernamePasswordAuthenticationToken(request.email(), request.senha());
         var auth = authenticationManager.authenticate(usernamePassword);
         String token = tokenService.generateToken((Usuario) auth.getPrincipal());
-        return new LoginUsuarioResponse(usuario.getIdUsuario(),usuario.getNome(), token);
+        return new LoginUsuarioResponse(usuario.getIdUsuario(),usuario.getNome(), token,usuario.getFotoUrl());
     }
 
     @Transactional

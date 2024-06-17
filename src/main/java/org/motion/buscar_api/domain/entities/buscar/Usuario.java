@@ -26,6 +26,7 @@ public class Usuario implements UserDetails {
     private String email;
     private String senha;
     private String confirmToken;
+    private String fotoUrl;
 
     public Usuario(CreateUsuarioDTO createUsuarioDTO) {
         this.nome = createUsuarioDTO.nome();

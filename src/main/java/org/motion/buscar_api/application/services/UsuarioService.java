@@ -129,6 +129,12 @@ public class UsuarioService {
         usuarioRepository.delete(usuario);
    }
 
+   public Usuario atualizarFoto(int id, UpdateFotoUsuarioDTO updateFotoUsuarioDTO){
+        Usuario usuario = buscarPorId(id);
+        usuario.setFotoUrl(updateFotoUsuarioDTO.getFotoUrl());
+        return usuarioRepository.save(usuario);
+    }
+
     private void verificarEmailDuplicado(String email) {
         if (usuarioRepository.existsByEmail(email)) {
             throw new DadoUnicoDuplicadoException("Email já cadastrado. Vá para login");

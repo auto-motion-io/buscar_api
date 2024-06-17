@@ -77,4 +77,10 @@ public class UsuarioController {
         return ResponseEntity.status(200).body("Usuario deletado com sucesso");
     }
 
+    @PutMapping("/atualizar-foto/{id}")
+    public ResponseEntity<Usuario> atualizarFoto(@PathVariable int id, @RequestBody UpdateFotoUsuarioDTO updateFotoUsuarioDTO) {
+        Usuario usuarioAtualizado = usuarioService.atualizarFoto(id,updateFotoUsuarioDTO);
+        return ResponseEntity.status(200).body(usuarioAtualizado);
+    }
+
 }

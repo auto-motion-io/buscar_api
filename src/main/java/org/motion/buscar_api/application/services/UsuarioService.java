@@ -196,4 +196,23 @@ public class UsuarioService {
         }
         return sb.toString();
     }
+
+    public Usuario criarUsuarioGoogle(CreateUserGoogleDTO novoUsuarioDTO) {
+        verificarEmailDuplicado(novoUsuarioDTO.email());
+        Usuario usuario = new Usuario(novoUsuarioDTO);
+        String senhaCriptografada = new BCryptPasswordEncoder().encode(novoUsuarioDTO.googleSub());
+        usuario.setSenha(senhaCriptografada);
+        return usuarioRepository.save(usuario);
+    }
+
+    public GoogleResponseDTO loginGoogle(GoogleAuthDTO googleAuthDTO) {
+        Usuario usuario = (Usuario) buscarPorEmail(googleAuthDTO.email());
+        if (usuario == null) {
+            throw new RecursoNaoEncontradoException("Essa conta Buscar não existe. Insira uma conta diferente ou obtenha uma nova.");
+        }
+        var usernamePassword = new UsernamePasswordAuthenticationToken(googleAuthDTO.email(), googleAuthDTO.googleSub());
+        var auth = authenticationManager.authenticate(usernamePassword);
+        String token = tokenService.generateToken((Usuario) auth.getPrincipal());
+        return new GoogleResponseDTO(usuario.getIdUsuario(),usuario.getNome(), token, usuario.getFotoUrl());
+    }
 }

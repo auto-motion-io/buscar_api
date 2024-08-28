@@ -2,6 +2,7 @@ package org.motion.buscar_api.domain.entities.buscar;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.motion.buscar_api.application.dtos.UsuarioDTO.CreateUserGoogleDTO;
 import org.motion.buscar_api.application.dtos.UsuarioDTO.CreateUsuarioDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,12 +28,21 @@ public class Usuario implements UserDetails {
     private String senha;
     private String confirmToken;
     private String fotoUrl;
+    private String googleSub;
 
     public Usuario(CreateUsuarioDTO createUsuarioDTO) {
         this.nome = createUsuarioDTO.nome();
         this.sobrenome = createUsuarioDTO.sobrenome();
         this.email = createUsuarioDTO.email();
         this.senha = createUsuarioDTO.senha();
+    }
+
+    public Usuario (CreateUserGoogleDTO createUserGoogleDTO){
+        this.email = createUserGoogleDTO.email();
+        this.googleSub = createUserGoogleDTO.googleSub();
+        this.nome = createUserGoogleDTO.nome();
+        this.sobrenome = createUserGoogleDTO.sobrenome();
+        this.fotoUrl = createUserGoogleDTO.fotoUrl();
     }
 
     @Override

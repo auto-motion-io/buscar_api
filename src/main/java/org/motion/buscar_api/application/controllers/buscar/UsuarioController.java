@@ -83,4 +83,15 @@ public class UsuarioController {
         return ResponseEntity.status(200).body(usuarioAtualizado);
     }
 
+    @PostMapping("/login-google")
+    public ResponseEntity loginGoogle(@RequestBody @Valid GoogleAuthDTO googleAuthDTO) {
+        GoogleResponseDTO googleResponseDTO = usuarioService.loginGoogle(googleAuthDTO);
+        return googleResponseDTO.chave().isBlank() ? ResponseEntity.badRequest().build() : ResponseEntity.ok(googleResponseDTO);
+    }
+
+    @PostMapping("/cadastrar-google")
+    public ResponseEntity<Usuario> cadastrarGoogle(@RequestBody @Valid CreateUserGoogleDTO googleUser) {
+        Usuario usuarioCadastrado = usuarioService.criarUsuarioGoogle(googleUser);
+        return ResponseEntity.status(201).body(usuarioCadastrado);
+    }
 }

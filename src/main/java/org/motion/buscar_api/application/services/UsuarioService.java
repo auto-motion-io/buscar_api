@@ -8,6 +8,7 @@ import org.motion.buscar_api.application.dtos.UsuarioDTO.*;
 import org.motion.buscar_api.application.exception.DadoUnicoDuplicadoException;
 import org.motion.buscar_api.application.exception.RecursoNaoEncontradoException;
 import org.motion.buscar_api.application.exception.SenhaIncorretaException;
+import org.motion.buscar_api.application.exception.UsuarioGoogleExistenteException;
 import org.motion.buscar_api.domain.entities.buscar.Usuario;
 import org.motion.buscar_api.domain.repositories.buscar.IUsuarioRepository;
 import org.motion.buscar_api.security.TokenService;
@@ -63,6 +64,11 @@ public class UsuarioService {
         if (usuario == null) {
             throw new RecursoNaoEncontradoException("Essa conta Buscar não existe. Insira uma conta diferente ou obtenha uma nova.");
         }
+
+        if (usuario.getGoogleSub() != null) {
+            throw new UsuarioGoogleExistenteException("Essa conta foi criada com o Google. Faça login com o Google.");
+        }
+
         if (!new BCryptPasswordEncoder().matches(request.senha(), usuario.getSenha())) {
             throw new SenhaIncorretaException("Sua conta ou senha está incorreta.");
         }
@@ -215,4 +221,5 @@ public class UsuarioService {
         String token = tokenService.generateToken((Usuario) auth.getPrincipal());
         return new GoogleResponseDTO(usuario.getIdUsuario(),usuario.getNome(), token, usuario.getFotoUrl());
     }
+
 }

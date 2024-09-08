@@ -84,4 +84,11 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), path, ErrorHelper.getStackTracePersonalizado(ex.getStackTrace()));
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(UsuarioGoogleExistenteException.class)
+    public ResponseEntity<ErrorResponse> handleUsuarioGoogleExistenteException(UsuarioGoogleExistenteException ex) {
+        String path = pathInterceptor.getPath();
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.CONFLICT, ex.getMessage(), path, ErrorHelper.getStackTracePersonalizado(ex.getStackTrace()));
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
 }

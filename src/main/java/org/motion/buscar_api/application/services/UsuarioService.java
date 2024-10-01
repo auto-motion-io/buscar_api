@@ -222,4 +222,9 @@ public class UsuarioService {
         return new GoogleResponseDTO(usuario.getIdUsuario(),usuario.getNome(), token, usuario.getFotoUrl());
     }
 
+    public Usuario atualizarPreferencias(int id, UpdatePreferenciaUsuarioDTO updatePreferenciaUsuarioDTO){
+        Usuario usuario = buscarPorId(id);
+        usuario.setPreferencias(updatePreferenciaUsuarioDTO.getPreferencias());
+        return usuarioRepository.save(usuario);
+    }
 }

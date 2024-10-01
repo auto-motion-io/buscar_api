@@ -95,4 +95,10 @@ public class UsuarioController {
         Usuario usuarioCadastrado = usuarioService.criarUsuarioGoogle(googleUser);
         return ResponseEntity.status(201).body(usuarioCadastrado);
     }
+
+    @PutMapping("/atualizar-preferencias/{id}")
+    public ResponseEntity<Usuario> atualizarPreferencias(@PathVariable int id, @RequestBody UpdatePreferenciaUsuarioDTO updatePreferenciaUsuarioDTO) {
+        Usuario usuarioAtualizado = usuarioService.atualizarPreferencias(id,updatePreferenciaUsuarioDTO);
+        return ResponseEntity.status(200).body(usuarioAtualizado);
+    }
 }

@@ -29,7 +29,8 @@ public class Usuario implements UserDetails {
     private String confirmToken;
     private String fotoUrl;
     private String googleSub;
-    private String preferencias;
+    private String preferenciasVeiculo;
+    private String preferenciasPropulsao;
 
     public Usuario(CreateUsuarioDTO createUsuarioDTO) {
         this.nome = createUsuarioDTO.nome();

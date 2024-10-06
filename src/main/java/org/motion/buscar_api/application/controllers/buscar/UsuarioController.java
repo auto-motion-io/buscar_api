@@ -97,8 +97,8 @@ public class UsuarioController {
     }
 
     @PutMapping("/atualizar-preferencias/{id}")
-    public ResponseEntity<Usuario> atualizarPreferencias(@PathVariable int id, @RequestBody UpdatePreferenciaUsuarioDTO updatePreferenciaUsuarioDTO) {
-        Usuario usuarioAtualizado = usuarioService.atualizarPreferencias(id,updatePreferenciaUsuarioDTO);
+    public ResponseEntity<Usuario> atualizarPreferencias(@PathVariable int id, @RequestBody UpdatePreferenciasDTO dto) {
+        Usuario usuarioAtualizado = usuarioService.atualizarPreferencias(id,dto);
         return ResponseEntity.status(200).body(usuarioAtualizado);
     }
 }

@@ -54,6 +54,8 @@ public class UsuarioService {
     public Usuario criar(CreateUsuarioDTO novoUsuarioDTO) {
         verificarEmailDuplicado(novoUsuarioDTO.email());
         Usuario usuario = new Usuario(novoUsuarioDTO);
+        usuario.setPreferenciasPropulsao(novoUsuarioDTO.preferenciasPropulsao());
+        usuario.setPreferenciasVeiculo(novoUsuarioDTO.preferenciasVeiculos());
         String senhaCriptografada = new BCryptPasswordEncoder().encode(novoUsuarioDTO.senha());
         usuario.setSenha(senhaCriptografada);
         return usuarioRepository.save(usuario);
@@ -222,9 +224,10 @@ public class UsuarioService {
         return new GoogleResponseDTO(usuario.getIdUsuario(),usuario.getNome(), token, usuario.getFotoUrl());
     }
 
-    public Usuario atualizarPreferencias(int id, UpdatePreferenciaUsuarioDTO updatePreferenciaUsuarioDTO){
+    public Usuario atualizarPreferencias(int id, UpdatePreferenciasDTO dto){
         Usuario usuario = buscarPorId(id);
-        usuario.setPreferencias(updatePreferenciaUsuarioDTO.getPreferencias());
+        usuario.setPreferenciasPropulsao(dto.getPreferenciasPropulsao());
+        usuario.setPreferenciasVeiculo(dto.getPreferenciasVeiculos());
         return usuarioRepository.save(usuario);
     }
 }

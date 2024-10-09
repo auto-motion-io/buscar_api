@@ -90,6 +90,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>buscar-api</finalName>
     </build>
 
 </project>

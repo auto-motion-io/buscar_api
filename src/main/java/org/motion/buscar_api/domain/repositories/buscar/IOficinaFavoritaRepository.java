@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface IOficinaFavoritaRepository extends JpaRepository<OficinaFavorita, Integer> {
-    List<OficinaFavorita> findByIdUsuario(Integer idUsuario);
-    List<OficinaFavorita> findByUsuarioAndOficina(Usuario usuario, Oficina oficina);
+    List<OficinaFavorita> findByUsuario (Usuario usuario);
+    OficinaFavorita findByUsuarioAndOficina(Usuario usuario, Oficina oficina);
 }

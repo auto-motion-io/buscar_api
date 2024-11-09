@@ -32,14 +32,16 @@ public class OficinaFavoritaService {
         return oficinaFavoritaRepository.save(oficinaFavorita);
     }
 
-    public void desfavoritarOficinaFavorita(Integer idUsuario, Integer idOficina){
+    public List<OficinaFavorita> listarOficinasFavoritas(Integer idUsuario) {
         Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow();
-        Oficina oficina = oficinaRepository.findById(idOficina).orElseThrow();
-        OficinaFavorita oficinaFavorita = (OficinaFavorita) oficinaFavoritaRepository.findByUsuarioAndOficina(usuario, oficina);
-        oficinaFavoritaRepository.delete(oficinaFavorita);
+        return oficinaFavoritaRepository.findByUsuario(usuario);
     }
 
-    public List<OficinaFavorita> listarOficinasFavoritas(Integer idUsuario) {
-        return oficinaFavoritaRepository.findByIdUsuario(idUsuario);
+    public void desfavoritarOficina(Integer idUsuario, Integer idOficina){
+        Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow();
+        Oficina oficina = oficinaRepository.findById(idOficina).orElseThrow();
+
+        OficinaFavorita oficinasFavoritas = oficinaFavoritaRepository.findByUsuarioAndOficina(usuario, oficina);
+        oficinaFavoritaRepository.delete(oficinasFavoritas);
     }
 }

@@ -10,7 +10,6 @@ import org.motion.buscar_api.application.services.UsuarioService;
 import org.motion.buscar_api.domain.entities.buscar.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

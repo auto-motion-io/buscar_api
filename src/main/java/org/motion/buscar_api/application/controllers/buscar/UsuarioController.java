@@ -87,7 +87,7 @@ public class UsuarioController {
     @PostMapping("/login-google")
     public ResponseEntity loginGoogle(@RequestBody @Valid GoogleAuthDTO googleAuthDTO) {
         GoogleResponseDTO googleResponseDTO = usuarioService.loginGoogle(googleAuthDTO);
-        return googleResponseDTO.chave().isBlank() ? ResponseEntity.badRequest().build() : ResponseEntity.ok(googleResponseDTO);
+        return googleResponseDTO.token().isBlank() ? ResponseEntity.badRequest().build() : ResponseEntity.ok(googleResponseDTO);
     }
 
     @PostMapping("/cadastrar-google")

@@ -78,7 +78,7 @@ public class UsuarioService {
         var usernamePassword = new UsernamePasswordAuthenticationToken(request.email(), request.senha());
         var auth = authenticationManager.authenticate(usernamePassword);
         String token = tokenService.generateToken((Usuario) auth.getPrincipal());
-        return new LoginUsuarioResponse(usuario.getIdUsuario(),usuario.getNome(), token,usuario.getFotoUrl());
+        return new LoginUsuarioResponse(usuario.getIdUsuario(),usuario.getEmail(),usuario.getNome(),usuario.getSobrenome(),token,usuario.getFotoUrl());
     }
 
     @Transactional

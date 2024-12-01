@@ -22,7 +22,7 @@ public class TokenService {
                 .create()
                 .withIssuer("motion-api")
                 .withSubject(usuario.getEmail())
-                .withExpiresAt(LocalDateTime.now().plusDays(10).toInstant(ZoneOffset.of("-03:00")))
+                .withExpiresAt(LocalDateTime.now().plusDays(30).toInstant(ZoneOffset.of("-03:00")))
                 //.withExpiresAt(LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.UTC)))
                 .sign(algoritmo);
         return token;
